@@ -1,3 +1,4 @@
+tournees-mobile.html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,15 +8,692 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2196F3">
     <title>Piano Dem France - Planification Tournées</title>
-    <!-- Leaflet CSS pour la carte -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />v<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#2196F3">
-    <title>Piano Dem France - Planification Tournées</title>
+    
     <!-- Leaflet CSS pour la carte -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-section {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-row input, .form-row select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: #1976D2;
+            transform: scale(0.98);
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .section-title {
+            background: white;
+            margin: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #2196F3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #map {
+            height: 300px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .clients-list {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .client-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .client-item.selected {
+            border-color: #2196F3;
+            background: #E3F2FD;
+        }
+
+        .client-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .client-route {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .etapes-table {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .etape-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4CAF50;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .etape-item.livraison {
+            border-left-color: #f44336;
+        }
+
+        .etape-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .etape-numero {
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .etape-type {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .etape-horaires {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .stats-bar {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2196F3;
+        }
+
+        .csv-input {
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .btn-group {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚚 PIANO DEM FRANCE</h1>
+        <p>Planification de Tournées</p>
+    </div>
+
+    <div class="form-section">
+        <div class="form-row">
+            <label>📋 Nom de la tournée</label>
+            <input type="text" id="nomTournee" placeholder="Tournée du jour...">
+        </div>
+        <div class="form-row">
+            <label>📅 Date</label>
+            <input type="date" id="dateTournee">
+        </div>
+        <div class="form-row">
+            <label>👤 Chauffeur</label>
+            <input type="text" id="chauffeur" placeholder="Nom du chauffeur...">
+        </div>
+        <div class="form-row">
+            <label>⏰ Heure de départ</label>
+            <input type="time" id="heureDepart" value="08:00">
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="importCSV()">📥 Import CSV</button>
+        <button class="btn btn-success" onclick="optimiserItineraire()">🔄 Optimiser</button>
+        <button class="btn btn-warning" onclick="exporterPDF()">📄 Export PDF</button>
+        <button class="btn btn-primary" onclick="sauvegarderTournee()">💾 Sauvegarder</button>
+    </div>
+
+    <div class="section-title">👥 Clients disponibles (sélectionnez)</div>
+    <div class="clients-list" id="clientsList">
+        <div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <p>Importez des clients via CSV pour commencer</p>
+        </div>
+    </div>
+
+    <div class="section-title">🗺️ Carte de la tournée</div>
+    <div id="map"></div>
+
+    <div class="section-title">📋 Étapes de la tournée</div>
+    <div class="etapes-table" id="etapesTable">
+        <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <p>Sélectionnez des clients et optimisez l'itinéraire</p>
+        </div>
+    </div>
+
+    <div class="stats-bar" id="statsBar">
+        📊 Distance: 0 km | Durée: 0h00
+    </div>
+
+    <!-- Input file caché pour CSV -->
+    <input type="file" id="csvInput" class="csv-input" accept=".csv" onchange="handleCSVImport(event)">
+
+    <!-- Modal pour messages -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">Information</div>
+            <div id="modalBody"></div>
+            <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // ===== DONNÉES GLOBALES =====
+        let clients = [];
+        let selectedClients = [];
+        let currentRoute = [];
+        let map = null;
+        let markers = [];
+        let polyline = null;
+
+        // ===== INITIALISATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser la date du jour
+            document.getElementById('dateTournee').valueAsDate = new Date();
+            
+            // Initialiser la carte
+            initMap();
+            
+            // Charger les clients du localStorage
+            loadClientsFromStorage();
+        });
+
+        function initMap() {
+            map = L.map('map').setView([48.8566, 2.3522], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        }
+
+        // ===== GESTION DES CLIENTS =====
+        function importCSV() {
+            document.getElementById('csvInput').click();
+        }
+
+        function handleCSVImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                parseCSV(text);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const headers = lines[0].split(',');
+            
+            let imported = 0;
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const values = lines[i].split(',');
+                const client = {
+                    id: Date.now() + i,
+                    civilite: values[0]?.trim() || '',
+                    nom: values[1]?.trim() || '',
+                    prenom: values[2]?.trim() || '',
+                    telephone: values[3]?.trim() || '',
+                    adresseDepart: values[4]?.trim() || '',
+                    cpDepart: values[5]?.trim() || '',
+                    villeDepart: values[6]?.trim() || '',
+                    etageDepart: values[7]?.trim() || '',
+                    ascenseurDepart: values[8]?.trim() || '',
+                    infosDepart: values[9]?.trim() || '',
+                    adresseArrivee: values[10]?.trim() || '',
+                    cpArrivee: values[11]?.trim() || '',
+                    villeArrivee: values[12]?.trim() || '',
+                    etageArrivee: values[13]?.trim() || '',
+                    ascenseurArrivee: values[14]?.trim() || '',
+                    infosArrivee: values[15]?.trim() || '',
+                    typePiano: values[16]?.trim() || ''
+                };
+                
+                clients.push(client);
+                imported++;
+            }
+            
+            saveClientsToStorage();
+            displayClients();
+            showModal('Succès', `${imported} clients importés avec succès !`);
+        }
+
+        function displayClients() {
+            const container = document.getElementById('clientsList');
+            
+            if (clients.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <p>Importez des clients via CSV pour commencer</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            clients.forEach(client => {
+                const item = document.createElement('div');
+                item.className = 'client-item';
+                item.innerHTML = `
+                    <input type="checkbox" id="client-${client.id}" onchange="toggleClient(${client.id})">
+                    <div class="client-info">
+                        <div class="client-name">${client.civilite} ${client.nom} ${client.prenom} - ${client.typePiano}</div>
+                        <div class="client-route">${client.villeDepart} → ${client.villeArrivee}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleClient(clientId) {
+            const checkbox = document.getElementById(`client-${clientId}`);
+            const item = checkbox.closest('.client-item');
+            
+            if (checkbox.checked) {
+                selectedClients.push(clientId);
+                item.classList.add('selected');
+            } else {
+                selectedClients = selectedClients.filter(id => id !== clientId);
+                item.classList.remove('selected');
+            }
+            
+            updatePreviewEtapes();
+        }
+
+        // ===== OPTIMISATION ITINÉRAIRE =====
+        function optimiserItineraire() {
+            if (selectedClients.length === 0) {
+                showModal('Erreur', 'Veuillez sélectionner au moins un client');
+                return;
+            }
+
+            const clientsData = selectedClients.map(id => 
+                clients.find(c => c.id === id)
+            );
+
+            currentRoute = optimizeRoute(clientsData);
+            updateMap();
+            updateEtapesTable();
+            showModal('Succès', 'Itinéraire optimisé !');
+        }
+
+        function optimizeRoute(clientsData) {
+            const route = [];
+            
+            // Algorithme simple : alternance enlèvement-livraison par client
+            clientsData.forEach(client => {
+                route.push({
+                    type: 'ENLEVEMENT',
+                    client: client,
+                    ville: client.villeDepart,
+                    coords: geocodeSimple(client.cpDepart)
+                });
+                route.push({
+                    type: 'LIVRAISON',
+                    client: client,
+                    ville: client.villeArrivee,
+                    coords: geocodeSimple(client.cpArrivee)
+                });
+            });
+            
+            return route;
+        }
+
+        function geocodeSimple(codePostal) {
+            const dept = codePostal.substring(0, 2);
+            const coords = {
+                '75': [48.8566, 2.3522],
+                '78': [48.8049, 2.1204],
+                '92': [48.8926, 2.2193],
+                '93': [48.9103, 2.5047],
+                '94': [48.7922, 2.4561],
+                '95': [49.0361, 2.0782]
+            };
+            return coords[dept] || [48.8566, 2.3522];
+        }
+
+        function updateMap() {
+            // Supprimer anciens marqueurs
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            if (polyline) map.removeLayer(polyline);
+
+            if (currentRoute.length === 0) return;
+
+            const latlngs = [];
+            currentRoute.forEach((etape, index) => {
+                const color = etape.type === 'ENLEVEMENT' ? '#4CAF50' : '#f44336';
+                const icon = L.divIcon({
+                    html: `<div style="background:${color};width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);">${index + 1}</div>`,
+                    className: '',
+                    iconSize: [35, 35]
+                });
+
+                const marker = L.marker(etape.coords, {icon: icon}).addTo(map);
+                marker.bindPopup(`<b>${etape.type}</b><br>${etape.client.nom} ${etape.client.prenom}<br>${etape.ville}`);
+                markers.push(marker);
+                latlngs.push(etape.coords);
+            });
+
+            // Tracer la ligne
+            if (latlngs.length > 0) {
+                polyline = L.polyline(latlngs, {color: '#2196F3', weight: 4}).addTo(map);
+                map.fitBounds(polyline.getBounds(), {padding: [20, 20]});
+            }
+        }
+
+        function updatePreviewEtapes() {
+            // Mise à jour simplifiée sans optimisation
+            const container = document.getElementById('etapesTable');
+            if (selectedClients.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>Sélectionnez des clients et optimisez l'itinéraire</p>
+                    </div>
+                `;
+                return;
+            }
+        }
+
+        function updateEtapesTable() {
+            const container = document.getElementById('etapesTable');
+            
+            if (currentRoute.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>Cliquez sur Optimiser pour voir les étapes</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const heureDepart = document.getElementById('heureDepart').value;
+            let [heures, minutes] = heureDepart.split(':').map(Number);
+            let distanceTotale = 0;
+
+            container.innerHTML = '';
+            currentRoute.forEach((etape, index) => {
+                const heureArrivee = `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                minutes += 30; // 30 min intervention
+                if (minutes >= 60) { heures++; minutes -= 60; }
+                const heureDepart = `${heures.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                
+                // Ajouter trajet vers prochaine étape
+                if (index < currentRoute.length - 1) {
+                    minutes += 30;
+                    if (minutes >= 60) { heures++; minutes -= 60; }
+                    distanceTotale += 20;
+                }
+
+                const etageKey = etape.type === 'ENLEVEMENT' ? 'etageDepart' : 'etageArrivee';
+                const ascKey = etape.type === 'ENLEVEMENT' ? 'ascenseurDepart' : 'ascenseurArrivee';
+
+                const item = document.createElement('div');
+                item.className = `etape-item ${etape.type.toLowerCase()}`;
+                item.innerHTML = `
+                    <div class="etape-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="etape-numero">${index + 1}</div>
+                            <div>
+                                <div class="etape-type">${etape.type === 'ENLEVEMENT' ? '🟢' : '🔴'} ${etape.type}</div>
+                                <div style="font-weight: bold; margin-top: 3px;">${etape.client.civilite} ${etape.client.nom} ${etape.client.prenom}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 13px;">
+                        <div>📍 ${etape.ville}</div>
+                        <div>🏢 Étage: ${etape.client[etageKey] || 'N/A'} | Ascenseur: ${etape.client[ascKey] || 'N/A'}</div>
+                        <div class="etape-horaires">
+                            ⏰ Arrivée: ${heureArrivee} | Départ: ${heureDepart}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+            // Mise à jour des stats
+            const dureeMinutes = (heures * 60 + minutes) - (parseInt(heureDepart.split(':')[0]) * 60 + parseInt(heureDepart.split(':')[1]));
+            const dureeH = Math.floor(dureeMinutes / 60);
+            const dureeM = dureeMinutes % 60;
+            document.getElementById('statsBar').textContent = `📊 Distance: ${distanceTotale} km | Durée: ${dureeH}h${dureeM.toString().padStart(2, '0')}`;
+        }
+
+        // ===== SAUVEGARDE & EXPORT =====
+        function sauvegarderTournee() {
+            const nom = document.getElementById('nomTournee').value;
+            if (!nom) {
+                showModal('Erreur', 'Veuillez donner un nom à la tournée');
+                return;
+            }
+            
+            const tournee = {
+                nom: nom,
+                date: document.getElementById('dateTournee').value,
+                chauffeur: document.getElementById('chauffeur').value,
+                heureDepart: document.getElementById('heureDepart').value,
+                clients: selectedClients,
+                route: currentRoute,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('tournee_' + tournee.timestamp, JSON.stringify(tournee));
+            showModal('Succès', `Tournée "${nom}" sauvegardée !`);
+        }
+
+        function exporterPDF() {
+            showModal('Export PDF', 'Fonctionnalité d\'export PDF disponible prochainement.\n\nVous pourrez exporter :\n- Liste des étapes avec horaires\n- Infos clients et contraintes\n- Distance et durée totales');
+        }
+
+        // ===== STOCKAGE LOCAL =====
+        function saveClientsToStorage() {
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+
+        function loadClientsFromStorage() {
+            const stored = localStorage.getItem('clients');
+            if (stored) {
+                clients = JSON.parse(stored);
+                displayClients();
+            }
+        }
+
+        // ===== MODAL =====
+        function showModal(title, message) {
+            document.getElementById('modalHeader').textContent = title;
+            document.getElementById('modalBody').textContent = message;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
