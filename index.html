@@ -702,8 +702,31 @@ tournees-mobile.html
 <div class="modal" id="modalClient">
   <div class="modal-content">
     <div class="modal-header" id="modalClientHeader">Ajouter un client</div>
-    <form id="formClient">
+<form id="formClient">
+  <div class="form-row">
+    <label>Nom du client</label>
+    <input type="text" id="clientNom" required>
   </div>
+  <div class="form-row">
+    <label>Adresse de départ</label>
+    <input type="text" id="clientAdrDep" required>
+  </div>
+  <div class="form-row">
+    <label>Code postal départ</label>
+    <input type="text" id="clientCpDep" required>
+  </div>
+  <div class="form-row">
+    <label>Adresse d'arrivée</label>
+    <input type="text" id="clientAdrArr" required>
+  </div>
+  <div class="form-row">
+    <label>Code postal arrivée</label>
+    <input type="text" id="clientCpArr" required>
+  </div>
+  <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 10px;">Ajouter le client</button>
+  <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="closeModalClient()">Annuler</button>
+</form>
+</div>
 </div>
 
 
