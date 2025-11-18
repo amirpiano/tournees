@@ -315,6 +315,7 @@ tournees-mobile.html
 
     <div class="btn-group">
         <button class="btn btn-primary" onclick="importCSV()">📥 Import CSV</button>
+                <button class="btn btn-primary" onclick="ouvrirFormClient()">➕ Ajouter Client Manuel</button>
         <button class="btn btn-success" onclick="optimiserItineraire()">🔄 Optimiser</button>
         <button class="btn btn-warning" onclick="exporterPDF()">📄 Export PDF</button>
         <button class="btn btn-primary" onclick="sauvegarderTournee()">💾 Sauvegarder</button>
@@ -695,5 +696,111 @@ tournees-mobile.html
             document.getElementById('modal').classList.remove('active');
         }
     </script>
-</body>
+
+
+<!-- Modal ajout client manuel -->
+<div class="modal" id="modalClient">
+  <div class="modal-content">
+    <div class="modal-header" id="modalClientHeader">Ajouter un client</div>
+    <form id="formClient">
+      <div class="form-row"><label>Civilité</label>
+        <select id="clientCivilite">
+          <option value="Mr">Mr</option>
+          <option value="Mme">Mme</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Nom</label>
+        <input type="text" id="clientNom" required>
+      </div>
+      <div class="form-row"><label>Prénom</label>
+        <input type="text" id="clientPrenom" required>
+      </div>
+      <div class="form-row"><label>Téléphone mobile</label>
+        <input type="text" id="clientTel" required>
+      </div>
+      <div class="form-row"><label>Adresse départ</label>
+        <input type="text" id="clientAdrDep" required>
+      </div>
+      <div class="form-row"><label>Code postal départ</label>
+        <input type="text" id="clientCpDep" required>
+      </div>
+      <div class="form-row"><label>Ville départ</label>
+        <input type="text" id="clientVilleDep" required>
+      </div>
+      <div class="form-row"><label>Étage départ</label>
+        <input type="text" id="clientEtageDep">
+      </div>
+      <div class="form-row"><label>Ascenseur départ</label>
+        <input type="text" id="clientAscDep">
+      </div>
+      <div class="form-row"><label>Infos départ</label>
+        <input type="text" id="clientInfosDep">
+      </div>
+      <div class="form-row"><label>Adresse arrivée</label>
+        <input type="text" id="clientAdrArr" required>
+      </div>
+      <div class="form-row"><label>Code postal arrivée</label>
+        <input type="text" id="clientCpArr" required>
+      </div>
+      <div class="form-row"><label>Ville arrivée</label>
+        <input type="text" id="clientVilleArr" required>
+      </div>
+      <div class="form-row"><label>Étage arrivée</label>
+        <input type="text" id="clientEtageArr">
+      </div>
+      <div class="form-row"><label>Ascenseur arrivée</label>
+        <input type="text" id="clientAscArr">
+      </div>
+      <div class="form-row"><label>Infos arrivée</label>
+        <input type="text" id="clientInfosArr">
+      </div>
+      <div class="form-row"><label>Type de piano</label>
+        <input type="text" id="clientPiano">
+      </div>
+      <button type="submit" class="btn btn-success" style="width:100%;margin-top:10px;">Ajouter le client</button>
+      <button type="button" class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="closeModalClient()">Annuler</button>
+    </form>
+  </div>
+</div>
+
+
+<script>
+// Fonctions pour la modale client manuel
+function ouvrirFormClient() {
+  document.getElementById('modalClient').classList.add('active');
+}
+
+function closeModalClient() {
+  document.getElementById('modalClient').classList.remove('active');
+}
+
+document.getElementById('formClient').onsubmit = function(e) {
+  e.preventDefault();
+  const client = {
+    id: Date.now(),
+    civilite: document.getElementById('clientCivilite').value,
+    nom: document.getElementById('clientNom').value,
+    prenom: document.getElementById('clientPrenom').value,
+    telephone: document.getElementById('clientTel').value,
+    adresseDepart: document.getElementById('clientAdrDep').value,
+    cpDepart: document.getElementById('clientCpDep').value,
+    villeDepart: document.getElementById('clientVilleDep').value,
+    etageDepart: document.getElementById('clientEtageDep').value,
+    ascenseurDepart: document.getElementById('clientAscDep').value,
+    infosDepart: document.getElementById('clientInfosDep').value,
+    adresseArrivee: document.getElementById('clientAdrArr').value,
+    cpArrivee: document.getElementById('clientCpArr').value,
+    villeArrivee: document.getElementById('clientVilleArr').value,
+    etageArrivee: document.getElementById('clientEtageArr').value,
+    ascenseurArrivee: document.getElementById('clientAscArr').value,
+    infosArrivee: document.getElementById('clientInfosArr').value,
+    typePiano: document.getElementById('clientPiano').value
+  };
+  clients.push(client);
+  saveClientsToStorage();
+  displayClients();
+  closeModalClient();
+  showModal('Succès', 'Client ajouté avec succès !');
+};
+</script></body>
 </html>
